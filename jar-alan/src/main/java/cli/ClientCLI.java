@@ -150,16 +150,16 @@ public class ClientCLI {
                             maquina.setCapacidadeMaxDisco(listaMaquina.getCapacidadeMaxDisco());
                         }
 
-                        listaMaquinas = connEc.query("SELECT idMaquina "
-                                + "FROM Maquina m LEFT JOIN Captura c "
-                                + "ON c.FK_Maquina = m.idMaquina"
-                                + " WHERE m.nomeMaquina = ?",
+                        listaMaquinas = connEc.query("select idMaquina "
+                                + "from Maquina m left join Captura c "
+                                + "on c.FK_Maquina = m.idMaquina"
+                                + " where m.nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class),
                                 maquina.getNomeMaquina());
-                        listaMaquinas = connAz.query("SELECT idMaquina "
-                                + "FROM Maquina m LEFT JOIN Captura c "
+                        listaMaquinas = connAz.query("select idMaquina "
+                                + "from Maquina m left join Captura c "
                                 + "on c.FK_Maquina = m.idMaquina"
-                                + "WHERE m.nomeMaquina = ?",
+                                + " where m.nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class),
                                 maquina.getNomeMaquina());
 
