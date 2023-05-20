@@ -1,0 +1,9 @@
+cli/ClientCLI$1.class
+connection/ConexaoEC2.class
+databases/Maquina.class
+databases/Usuario.class
+connection/ConexaoMySQL.class
+connection/ConexaoAzure.class
+databases/Captura.class
+databases/Status.class
+cli/ClientCLI.class
