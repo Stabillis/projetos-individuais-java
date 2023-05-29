@@ -11,7 +11,7 @@ public class Maquina {
     private Integer fkStatus;
     private Double capacidadeMaxRAM;
     private Double capacidadeMaxDisco;
-    private Double frequenciaCPU;
+    private Double capacidadeMaxCPU;
     private String arquitetura;
     private String sistemaOperacional;
     private Integer fkEmpresa;
@@ -56,12 +56,12 @@ public class Maquina {
         this.capacidadeMaxDisco = capacidadeMaxDisco;
     }
 
-    public Double getFrequenciaCPU() {
-        return frequenciaCPU;
+    public Double getCapacidadeMaxCPU() {
+        return capacidadeMaxCPU;
     }
 
-    public void setFrequenciaCPU(Double frequenciaCPU) {
-        this.frequenciaCPU = frequenciaCPU;
+    public void setCapacidadeMaxCPU(Double capacidadeMaxCPU) {
+        this.capacidadeMaxCPU = capacidadeMaxCPU;
     }
 
     public String getArquitetura() {
@@ -90,12 +90,12 @@ public class Maquina {
 
     @Override
     public String toString() {
-        return "Maquina{" + "idMaquina=" + idMaquina + ", nomeMaquina="
-                + nomeMaquina + ", fkStatus=" + fkStatus + ", "
-                + "capacidadeMaxRAM=" + capacidadeMaxRAM + ", "
-                + "capacidadeMaxDisco=" + capacidadeMaxDisco + ", "
-                + "frequenciaCPU=" + frequenciaCPU + ", arquitetura="
-                + arquitetura + ", sistemaOperacional="
+        return "Maquina{" + "idMaquina=" + idMaquina + ", "
+                + "nomeMaquina=" + nomeMaquina + ", fkStatus="
+                + fkStatus + ", capacidadeMaxRAM=" + capacidadeMaxRAM + ","
+                + " capacidadeMaxDisco=" + capacidadeMaxDisco + ", "
+                + "capacidadeMaxCPU=" + capacidadeMaxCPU + ","
+                + " arquitetura=" + arquitetura + ", sistemaOperacional="
                 + sistemaOperacional + ", fkEmpresa=" + fkEmpresa + '}';
     }
 

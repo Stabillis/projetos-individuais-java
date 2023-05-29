@@ -12,6 +12,7 @@ import connection.ConexaoAzure;
 import connection.ConexaoEC2;
 import connection.ConexaoMySQL;
 import databases.Captura;
+import databases.Empresa;
 import databases.Maquina;
 import databases.Status;
 import databases.Usuario;
@@ -49,6 +50,7 @@ public class ClientCLI {
         Maquina maquina = new Maquina();
         Status status = new Status();
         Captura captura = new Captura();
+        Empresa empresa = new Empresa();
 
         // Criando o gerenciador
         DiscoGrupo grupoDeDiscos = looca.getGrupoDeDiscos();
@@ -124,50 +126,97 @@ public class ClientCLI {
                                 + "            (__)\\       )\\/\\\n"
                                 + "                ||----w |\n"
                                 + "                ||     ||");
-                        //BUSCANDO FK_EMPRESA DO USUARIO
-                        for (Usuario listaUsuario : listaUsuarios) {
-                            usuario.setFkEmpresa(listaUsuario.getFkEmpresa());
-                        }
-
-                        //PEGANDO HOSTNAME
+                        //DEFININDO HOSTNAME
                         for (RedeInterface dado : interfaces) {
                             maquina.setNomeMaquina(grupoParametros.getHostName());
                         }
 
-                        //BUSCANDO MAQUINA A PARTIR DA FK_EMPRESA DO USUARIO
+                        //BUSCANDO E INSERINDO STATUS
+                        List<Status> listaStatus = new ArrayList<>();
+                        listaStatus = connAz.query("SELECT * FROM Status",
+                                new BeanPropertyRowMapper<>(Status.class));
+                        for (Status stats : listaStatus) {
+                            status.setIdStatus(stats.getIdStatus());
+                            status.setTipoStatus(stats.getTipoStatus());
+
+                            connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
+                                    + "SELECT ?, ?"
+                                    + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
+                                    status.getIdStatus(),
+                                    status.getTipoStatus(),
+                                    status.getTipoStatus()
+                            );
+                        }
+
+                        //PEGANDO dados da EMPRESA e inserindo 
+                        List<Empresa> listaEmpresas = new ArrayList<>();
+                        listaEmpresas = connAz.query("SELECT * FROM Empresa WHERE idEmpresa = ?",
+                                new BeanPropertyRowMapper<>(Empresa.class), usuario.getFkEmpresa());
+
+                        for (Empresa listaEmpresa : listaEmpresas) {
+                            empresa.setIdEmpresa(listaEmpresa.getIdEmpresa());
+                            empresa.setBairro(listaEmpresa.getBairro());
+                            empresa.setCep(listaEmpresa.getCep());
+                            empresa.setCidade(listaEmpresa.getCidade());
+                            empresa.setCnpj(listaEmpresa.getCnpj());
+                            empresa.setComplemento(listaEmpresa.getComplemento());
+                            empresa.setEstado(listaEmpresa.getEstado());
+                            empresa.setLogradouro(listaEmpresa.getLogradouro());
+                            empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
+                            empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
+                        }
+
+                        connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
+                                + " Logradouro, Complemento, Bairro, Cidade, Estado)"
+                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                                empresa.getIdEmpresa(),
+                                empresa.getNomeEmpresa(),
+                                empresa.getCnpj(),
+                                empresa.getTelefoneFixo(),
+                                empresa.getCep(),
+                                empresa.getLogradouro(),
+                                empresa.getComplemento(),
+                                empresa.getBairro(),
+                                empresa.getCidade(),
+                                empresa.getEstado(),
+                                empresa.getCnpj()
+                        );
+
+                        //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
                         List<Maquina> listaMaquinas = new ArrayList<>();
-                        listaMaquinas = connEc.query("SELECT * FROM Maquina "
-                                + "WHERE nomeMaquina = ?",
-                                new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
-                        System.out.println("Máquina atual: " + listaMaquinas);
                         listaMaquinas = connAz.query("SELECT * FROM Maquina "
                                 + "WHERE nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
-                        System.out.println("Máquina atual: " + listaMaquinas);
-
-                        for (Maquina listaMaquina : listaMaquinas) {
-                            maquina.setNomeMaquina(listaMaquina.getNomeMaquina());
-                            maquina.setCapacidadeMaxDisco(listaMaquina.getCapacidadeMaxDisco());
-                        }
-
-                        listaMaquinas = connEc.query("select idMaquina "
-                                + "from Maquina m left join Captura c "
-                                + "on c.FK_Maquina = m.idMaquina"
-                                + " where m.nomeMaquina = ?",
-                                new BeanPropertyRowMapper<>(Maquina.class),
-                                maquina.getNomeMaquina());
-                        listaMaquinas = connAz.query("select idMaquina "
-                                + "from Maquina m left join Captura c "
-                                + "on c.FK_Maquina = m.idMaquina"
-                                + " where m.nomeMaquina = ?",
-                                new BeanPropertyRowMapper<>(Maquina.class),
-                                maquina.getNomeMaquina());
 
                         for (Maquina listaMaquina : listaMaquinas) {
                             maquina.setIdMaquina(listaMaquina.getIdMaquina());
+                            maquina.setFkStatus(listaMaquina.getFkStatus());
+                            maquina.setCapacidadeMaxRAM(listaMaquina.getCapacidadeMaxRAM());
+                            maquina.setCapacidadeMaxDisco(listaMaquina.getCapacidadeMaxDisco());
+                            maquina.setCapacidadeMaxCPU(listaMaquina.getCapacidadeMaxCPU());
+                            maquina.setArquitetura(listaMaquina.getArquitetura());
+                            maquina.setSistemaOperacional(listaMaquina.getSistemaOperacional());
+                            maquina.setFkEmpresa(empresa.getIdEmpresa());
                             captura.setFkMaquina(listaMaquina.getIdMaquina());
                         }
 
+                        //INSERINDO DADOS MÁQUINA CONTAINER
+                        connEc.update("INSERT INTO Maquina (idMaquina, nomeMaquina, FK_Status, capacidadeMaxRam, capacidadeMaxDisco,"
+                                + " capacidadeMaxCPU, arquitetura, SistemaOperacional, FK_Empresa)"
+                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?"
+                                + " WHERE NOT EXISTS (SELECT 1 FROM Maquina WHERE nomeMaquina = ?)",
+                                maquina.getIdMaquina(),
+                                maquina.getNomeMaquina(),
+                                maquina.getFkStatus(),
+                                maquina.getCapacidadeMaxRAM(),
+                                maquina.getCapacidadeMaxDisco(),
+                                maquina.getCapacidadeMaxCPU(),
+                                maquina.getArquitetura(),
+                                maquina.getSistemaOperacional(),
+                                maquina.getFkEmpresa(),
+                                maquina.getNomeMaquina()
+                        );
                         // TIMER
                         new Timer().scheduleAtFixedRate(new TimerTask() {
                             @Override
