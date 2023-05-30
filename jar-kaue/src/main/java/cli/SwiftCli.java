@@ -162,7 +162,7 @@ public class SwiftCli {
 
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
-                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ? "
                                 + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
@@ -197,7 +197,7 @@ public class SwiftCli {
 
                         //INSERINDO DADOS MÁQUINA CONTAINER
                         connEc.update("INSERT INTO Maquina (idMaquina, nomeMaquina, FK_Status, capacidadeMaxRam, capacidadeMaxDisco,"
-                                + " capacidadeMaxCPU, arquitetura, SistemaOperacional, FK_Empresa)"
+                                + " capacidadeMaxCPU, Arquitetura, SistemaOperacional, FK_Empresa)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?"
                                 + " WHERE NOT EXISTS (SELECT 1 FROM Maquina WHERE nomeMaquina = ?)",
                                 maquina.getIdMaquina(),
