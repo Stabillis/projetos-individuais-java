@@ -33,7 +33,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author alan
  */
 public class ClientCLI {
-    
+
     public static void main(String[] args) {
         // Instanciando classes
         ConexaoMySQL conexaoMySql = new ConexaoMySQL();
@@ -70,27 +70,25 @@ public class ClientCLI {
         Integer opcao = 1;
         String email;
         String password;
-        
+
         System.out.println("LOGIN");
         System.out.println("E-mail:");
         email = scanEmail.nextLine();
         System.out.println("Senha:");
         password = scanSenha.nextLine();
-        
+
         usuario.setEmail(email);
         usuario.setSenha(password);
-        
+
         List<Usuario> listaUsuarios = new ArrayList();
         listaUsuarios = connAz.query("SELECT * FROM [dbo].[Usuario] WHERE email = ? AND senha = ?",
                 new BeanPropertyRowMapper<>(Usuario.class),
                 usuario.getEmail(), usuario.getSenha());
-        
+
         for (Usuario Usuario : listaUsuarios) {
-            usuario.setEmail(Usuario.getEmail());
-            usuario.setSenha(Usuario.getSenha());
             usuario.setFkEmpresa(Usuario.getFkEmpresa());
         }
-        
+
         if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
             System.out.println("Login efetuado com sucesso!");
             System.out.println(" -----------------------------------------\n"
@@ -103,13 +101,13 @@ public class ClientCLI {
                     + "            (__)\\       )\\/\\\n"
                     + "                ||----w |\n"
                     + "                ||     ||");
-            
+
             while (opcao != 0) {
-                
+
                 System.out.println("\n"
                         + "1-Capturar dados | 2-Monitorar | 0-Sair");
                 opcao = scan.nextInt();
-                
+
                 switch (opcao) {
                     case 0:
                         System.out.println(" -----------\n"
@@ -122,7 +120,7 @@ public class ClientCLI {
                                 + "                ||     ||");
                         System.exit(0); // Sai do programa
                         break;
-                    
+
                     case 1:
                         System.out.println(" ----------------------------------------\n"
                                 + "< Se quiser encerrar a captura, digite 0 >\n"
@@ -144,7 +142,7 @@ public class ClientCLI {
                         for (Status stats : listaStatus) {
                             status.setIdStatus(stats.getIdStatus());
                             status.setTipoStatus(stats.getTipoStatus());
-                            
+
                             connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
                                     + "SELECT ?, ?"
                                     + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
@@ -158,7 +156,7 @@ public class ClientCLI {
                         List<Empresa> listaEmpresas = new ArrayList<>();
                         listaEmpresas = connAz.query("SELECT * FROM Empresa WHERE idEmpresa = ?",
                                 new BeanPropertyRowMapper<>(Empresa.class), usuario.getFkEmpresa());
-                        
+
                         for (Empresa listaEmpresa : listaEmpresas) {
                             empresa.setIdEmpresa(listaEmpresa.getIdEmpresa());
                             empresa.setBairro(listaEmpresa.getBairro());
@@ -171,7 +169,7 @@ public class ClientCLI {
                             empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
                             empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
                         }
-                        
+
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
@@ -194,7 +192,7 @@ public class ClientCLI {
                         listaMaquinas = connAz.query("SELECT * FROM Maquina "
                                 + "WHERE nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
-                        
+
                         for (Maquina listaMaquina : listaMaquinas) {
                             maquina.setIdMaquina(listaMaquina.getIdMaquina());
                             maquina.setFkStatus(listaMaquina.getFkStatus());
@@ -257,28 +255,28 @@ public class ClientCLI {
                                     String[] arrayDiscoTotal = discoTotal.split("GiB");
                                     System.out.println("Total disco: " + arrayDiscoTotal[0]);
                                     Double totalDisco = Double.valueOf(arrayDiscoTotal[0].replace(",", "."));
-                                    
+
                                     String discoDisponivel = conversor.formatarBytes(volumes.get(0).getDisponivel());
                                     String[] arrayDiscoDisponivel = discoDisponivel.split("GiB");
                                     System.out.println("Disponivel disco: " + arrayDiscoDisponivel[0]);
                                     Double disponivelDisco = Double.valueOf(arrayDiscoDisponivel[0].replace(",", "."));
                                     Double disco = (totalDisco - disponivelDisco);
-                                    
+
                                     captura.setUsoDisco(disco);
                                 }
-                                
+
                                 for (RedeInterface dado : interfaces) {
                                     long pacRecebidos = dado.getPacotesRecebidos();
                                     int pacRecInt = (int) pacRecebidos;
-                                    
+
                                     captura.setPacotesRecebidos(pacRecInt);
-                                    
+
                                     long pacEnviados = dado.getPacotesEnviados();
                                     int pacEnvInt = (int) pacEnviados;
-                                    
+
                                     captura.setPacotesEnviados(pacEnvInt);
                                 }
-                                
+
                                 connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
                                         + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -308,7 +306,7 @@ public class ClientCLI {
                                 0, 15000); // roda a cada 15segundos
 
                         break;
-                    
+
                     case 2:
                         System.out.println(" -----------------------------------------\n"
                                 + "< Irei te direcionar para o nosso website >\n"
@@ -318,26 +316,26 @@ public class ClientCLI {
                                 + "            (__)\\       )\\/\\\n"
                                 + "                ||----w |\n"
                                 + "                ||     ||");
-                        
+
                         String url = "https://stabillis.azurewebsites.net";
-                        
+
                         try {
                             Desktop desktop = Desktop.getDesktop();
                             desktop.browse(new URI(url));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        
+
                         break;
-                    
+
                     default:
                         System.out.println("Opção inválida.");
                 }
             }
-            
+
         } else {
             System.out.println("E-mail e/ou senha incorretos.");
         }
-        
+
     }
 }
