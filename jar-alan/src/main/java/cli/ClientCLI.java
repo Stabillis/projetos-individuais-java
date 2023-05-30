@@ -286,7 +286,7 @@ public class ClientCLI {
                                         captura.getFkMaquina()
                                 );
                                 connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
