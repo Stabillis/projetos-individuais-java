@@ -12,19 +12,11 @@ public class Captura {
     private Double usoRAM;
     private Double usoCPU;
     private Double usoDisco;
-    private Integer pacotesRecebidos;
-    private Integer pacotesEnviados;
+    private String bytesRecebidos;
+    private String bytesEnviados;
     private String tempoAtividade;
     private Timestamp dataHora;
     private Integer fkMaquina;
-
-    public Integer getFkMaquina() {
-        return fkMaquina;
-    }
-
-    public void setFkMaquina(Integer fkMaquina) {
-        this.fkMaquina = fkMaquina;
-    }
 
     public Integer getIdCaptura() {
         return idCaptura;
@@ -58,20 +50,20 @@ public class Captura {
         this.usoDisco = usoDisco;
     }
 
-    public Integer getPacotesRecebidos() {
-        return pacotesRecebidos;
+    public String getBytesRecebidos() {
+        return bytesRecebidos;
     }
 
-    public void setPacotesRecebidos(Integer pacotesRecebidos) {
-        this.pacotesRecebidos = pacotesRecebidos;
+    public void setBytesRecebidos(String bytesRecebidos) {
+        this.bytesRecebidos = bytesRecebidos;
     }
 
-    public Integer getPacotesEnviados() {
-        return pacotesEnviados;
+    public String getBytesEnviados() {
+        return bytesEnviados;
     }
 
-    public void setPacotesEnviados(Integer pacotesEnviados) {
-        this.pacotesEnviados = pacotesEnviados;
+    public void setBytesEnviados(String bytesEnviados) {
+        this.bytesEnviados = bytesEnviados;
     }
 
     public String getTempoAtividade() {
@@ -90,14 +82,27 @@ public class Captura {
         this.dataHora = dataHora;
     }
 
+    public Integer getFkMaquina() {
+        return fkMaquina;
+    }
+
+    public void setFkMaquina(Integer fkMaquina) {
+        this.fkMaquina = fkMaquina;
+    }
+
     @Override
     public String toString() {
-        return "Captura{" + "idCaptura=" + idCaptura + ", "
-                + "usoRAM=" + usoRAM + ", usoCPU=" + usoCPU + ","
-                + " usoDisco=" + usoDisco + ", pacotesRecebidos="
-                + pacotesRecebidos + ", pacotesEnviados=" + pacotesEnviados
-                + ", tempoAtividade=" + tempoAtividade + ", dataHora="
-                + dataHora + ", fkMaquina=" + fkMaquina + '}';
+        return "Captura{" + "idCaptura=" + idCaptura 
+                + ", usoRAM=" + usoRAM 
+                + ", usoCPU=" + usoCPU 
+                + ", usoDisco=" + usoDisco 
+                + ", bytesRecebidos=" + bytesRecebidos 
+                + ", bytesEnviados=" + bytesEnviados 
+                + ", tempoAtividade=" + tempoAtividade 
+                + ", dataHora=" + dataHora 
+                + ", fkMaquina=" + fkMaquina + '}';
     }
+
+
 
 }
