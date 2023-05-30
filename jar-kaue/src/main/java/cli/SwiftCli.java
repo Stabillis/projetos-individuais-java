@@ -136,7 +136,7 @@ public class SwiftCli {
                         for (Status stats : listaStatus) {
                             status.setIdStatus(stats.getIdStatus());
                             status.setTipoStatus(stats.getTipoStatus());
-                            
+
                             connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
                                     + "SELECT ?, ?"
                                     + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
@@ -150,7 +150,7 @@ public class SwiftCli {
                         List<Empresa> listaEmpresas = new ArrayList<>();
                         listaEmpresas = connAz.query("SELECT * FROM Empresa WHERE idEmpresa = ?",
                                 new BeanPropertyRowMapper<>(Empresa.class), usuario.getFkEmpresa());
-                        
+
                         for (Empresa listaEmpresa : listaEmpresas) {
                             empresa.setIdEmpresa(listaEmpresa.getIdEmpresa());
                             empresa.setBairro(listaEmpresa.getBairro());
@@ -163,11 +163,11 @@ public class SwiftCli {
                             empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
                             empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
                         }
-                        
+
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + " WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
                                 empresa.getCnpj(),
@@ -186,7 +186,7 @@ public class SwiftCli {
                         listaMaquinas = connAz.query("SELECT * FROM Maquina "
                                 + "WHERE nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
-                        
+
                         for (Maquina listaMaquina : listaMaquinas) {
                             maquina.setIdMaquina(listaMaquina.getIdMaquina());
                             maquina.setFkStatus(listaMaquina.getFkStatus());
@@ -201,7 +201,7 @@ public class SwiftCli {
 
                         //INSERINDO DADOS MÁQUINA CONTAINER
                         connEc.update("INSERT INTO Maquina (idMaquina, nomeMaquina, FK_Status, capacidadeMaxRam, capacidadeMaxDisco,"
-                                + " capacidadeMaxCPU, Arquitetura, SistemaOperacional, FK_Empresa)"
+                                + " capacidadeMaxCPU, arquitetura, SistemaOperacional, FK_Empresa)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?"
                                 + " WHERE NOT EXISTS (SELECT 1 FROM Maquina WHERE nomeMaquina = ?)",
                                 maquina.getIdMaquina(),
@@ -249,25 +249,25 @@ public class SwiftCli {
                                     String[] arrayDiscoTotal = discoTotal.split("GiB");
                                     System.out.println("Total disco: " + arrayDiscoTotal[0]);
                                     Double totalDisco = Double.valueOf(arrayDiscoTotal[0].replace(",", "."));
-                                    
+
                                     String discoDisponivel = conversor.formatarBytes(volumes.get(0).getDisponivel());
                                     String[] arrayDiscoDisponivel = discoDisponivel.split("GiB");
                                     System.out.println("Disponivel disco: " + arrayDiscoDisponivel[0]);
                                     Double disponivelDisco = Double.valueOf(arrayDiscoDisponivel[0].replace(",", "."));
                                     Double disco = (totalDisco - disponivelDisco);
-                                    
+
                                     captura.setUsoDisco(disco);
                                 }
-                                
+
                                 for (RedeInterface dado : interfaces) {
                                     captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
                                     captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
                                     System.out.println("Bytes enviados : " + captura.getBytesEnviados());
                                     System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
                                 }
-                                
+
                                 connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "byteRecebidos, byteEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
@@ -279,7 +279,7 @@ public class SwiftCli {
                                         captura.getFkMaquina()
                                 );
                                 connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "byteRecebidos, byteEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
