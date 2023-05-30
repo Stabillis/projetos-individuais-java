@@ -266,25 +266,20 @@ public class ClientCLI {
                                 }
 
                                 for (RedeInterface dado : interfaces) {
-                                    long pacRecebidos = dado.getPacotesRecebidos();
-                                    int pacRecInt = (int) pacRecebidos;
-
-                                    captura.setPacotesRecebidos(pacRecInt);
-
-                                    long pacEnviados = dado.getPacotesEnviados();
-                                    int pacEnvInt = (int) pacEnviados;
-
-                                    captura.setPacotesEnviados(pacEnvInt);
+                                    captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
+                                    captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
+                                    System.out.println("Bytes enviados : " + captura.getBytesEnviados());
+                                    System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
                                 }
 
                                 connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
@@ -295,8 +290,8 @@ public class ClientCLI {
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
