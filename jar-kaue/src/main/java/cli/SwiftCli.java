@@ -85,16 +85,20 @@ public class SwiftCli {
                 new BeanPropertyRowMapper<>(Usuario.class),
                 usuario.getEmail(), usuario.getSenha());
 
+        for (Usuario Usuario : listaUsuarios) {
+            usuario.setFkEmpresa(Usuario.getFkEmpresa());
+        }
+
         if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
             System.out.println("Login efetuado com sucesso!");
             System.out.println(" -----------------------------------------\n"
-                    + "/             WELCOME TO SWIFT.S.A          \\\n"
-                    + "|            Que bom te ver de novo!         |\n"
-                    + "\\          O que deseja fazer hoje?         /\n"
+                    + "/          WELCOME TO SWIFT.S.A           \\\n"
+                    + "|         Que bom te ver de novo!         |\n"
+                    + "\\        O que deseja fazer hoje?        /\n"
                     + " -----------------------------------------\n"
-                    + "                 /\\_/\\  MIAU!\n"
-                    + "                ( o.o )\n"
-                    + "                 > ^ <");
+                    + "         /\\_/\\  MIAU!\n"
+                    + "        ( o.o )\\ n"
+                    + "         > ^ <");
 
             while (opcao != 0) {
 
@@ -104,7 +108,7 @@ public class SwiftCli {
 
                 switch (opcao) {
                     case 0:
-                        System.out.println(" ---------------\n"
+                        System.out.println(" -----------\n"
                                 + "< Até mais! Miau!>\n"
                                 + " ---------------\n"
                                 + "   /\\_/\\  \n"
@@ -117,9 +121,9 @@ public class SwiftCli {
                         System.out.println(" ----------------------------------------\n"
                                 + "< Se quiser encerrar a captura, digite 0 >\n"
                                 + " ----------------------------------------\n"
-                                + "          /\\_/\\  Bom monitoramento! Miau! Miau!\n"
-                                + "         ( >.o )\n"
-                                + "          > ^ <");
+                                + "       /\\_/\\  Bom monitoramento! Miau! Miau!\n"
+                                + "      ( >.o )\\ \n"
+                                + "       > ^ <");
                         //DEFININDO HOSTNAME
                         for (RedeInterface dado : interfaces) {
                             maquina.setNomeMaquina(grupoParametros.getHostName());
@@ -162,7 +166,7 @@ public class SwiftCli {
 
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
-                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ? "
+                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
                                 + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
@@ -197,7 +201,7 @@ public class SwiftCli {
 
                         //INSERINDO DADOS MÁQUINA CONTAINER
                         connEc.update("INSERT INTO Maquina (idMaquina, nomeMaquina, FK_Status, capacidadeMaxRam, capacidadeMaxDisco,"
-                                + " capacidadeMaxCPU, Arquitetura, SistemaOperacional, FK_Empresa)"
+                                + " capacidadeMaxCPU, arquitetura, SistemaOperacional, FK_Empresa)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?"
                                 + " WHERE NOT EXISTS (SELECT 1 FROM Maquina WHERE nomeMaquina = ?)",
                                 maquina.getIdMaquina(),
@@ -256,37 +260,32 @@ public class SwiftCli {
                                 }
 
                                 for (RedeInterface dado : interfaces) {
-                                    long pacRecebidos = dado.getPacotesRecebidos();
-                                    int pacRecInt = (int) pacRecebidos;
-
-                                    captura.setPacotesRecebidos(pacRecInt);
-
-                                    long pacEnviados = dado.getPacotesEnviados();
-                                    int pacEnvInt = (int) pacEnviados;
-
-                                    captura.setPacotesEnviados(pacEnvInt);
+                                    captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
+                                    captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
+                                    System.out.println("Bytes enviados : " + captura.getBytesEnviados());
+                                    System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
                                 }
 
                                 connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
                                 );
                                 connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
@@ -301,9 +300,9 @@ public class SwiftCli {
                         System.out.println(" -----------------------------------------\n"
                                 + "< Irei te direcionar para o nosso website >\n"
                                 + " -----------------------------------------\n"
-                                + "           /\\_/\\  \n"
-                                + "          ( ^.^ )\n"
-                                + "           ^ º ^");
+                                + "        /\\_/\\ \n"
+                                + "       ( ^.^ )\\\n"
+                                + "        ^ º ^");
 
                         String url = "https://stabillis.azurewebsites.net";
 
@@ -327,3 +326,4 @@ public class SwiftCli {
 
     }
 }
+
