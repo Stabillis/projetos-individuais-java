@@ -92,17 +92,7 @@ public class Captura {
 
     @Override
     public String toString() {
-        return "Captura{" + "idCaptura=" + idCaptura 
-                + ", usoRAM=" + usoRAM 
-                + ", usoCPU=" + usoCPU 
-                + ", usoDisco=" + usoDisco 
-                + ", bytesRecebidos=" + bytesRecebidos 
-                + ", bytesEnviados=" + bytesEnviados 
-                + ", tempoAtividade=" + tempoAtividade 
-                + ", dataHora=" + dataHora 
-                + ", fkMaquina=" + fkMaquina + '}';
+        return "Captura{" + "idCaptura=" + idCaptura + ", usoRAM=" + usoRAM + ", usoCPU=" + usoCPU + ", usoDisco=" + usoDisco + ", bytesRecebidos=" + bytesRecebidos + ", bytesEnviados=" + bytesEnviados + ", tempoAtividade=" + tempoAtividade + ", dataHora=" + dataHora + ", fkMaquina=" + fkMaquina + '}';
     }
-
-
 
 }

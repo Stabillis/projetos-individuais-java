@@ -1,9 +1,6 @@
 connection\ConexaoMySQL.class
-cli\SwiftCli.class
 databases\Captura.class
-databases\Empresa.class
 connection\ConexaoAzure.class
-cli\SwiftCli$1.class
 databases\Status.class
 databases\Usuario.class
 databases\Maquina.class

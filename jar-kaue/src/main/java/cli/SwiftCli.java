@@ -33,7 +33,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @author alan
  */
 public class SwiftCli {
-    
+
     public static void main(String[] args) {
         // Instanciando classes
         ConexaoMySQL conexaoMySql = new ConexaoMySQL();
@@ -70,45 +70,45 @@ public class SwiftCli {
         Integer opcao = 1;
         String email;
         String password;
-        
+
         System.out.println("LOGIN");
         System.out.println("E-mail:");
         email = scanEmail.nextLine();
         System.out.println("Senha:");
         password = scanSenha.nextLine();
-        
+
         usuario.setEmail(email);
         usuario.setSenha(password);
-        
+
         List<Usuario> listaUsuarios = new ArrayList();
         listaUsuarios = connAz.query("SELECT * FROM [dbo].[Usuario] WHERE email = ? AND senha = ?",
                 new BeanPropertyRowMapper<>(Usuario.class),
-                usuario.getEmail(), usuario.getSenha());        
-        
-        for (Usuario listaUsuario : listaUsuarios) {
-            usuario.setFkEmpresa(listaUsuario.getFkEmpresa());
+                usuario.getEmail(), usuario.getSenha());
+
+        for (Usuario Usuario : listaUsuarios) {
+            usuario.setFkEmpresa(Usuario.getFkEmpresa());
         }
-        
+
         if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
             System.out.println("Login efetuado com sucesso!");
             System.out.println(" -----------------------------------------\n"
-                    + "/             WELCOME TO SWIFT.S.A          \\\n"
-                    + "|            Que bom te ver de novo!         |\n"
-                    + "\\          O que deseja fazer hoje?         /\n"
+                    + "/          WELCOME TO SWIFT.S.A           \\\n"
+                    + "|         Que bom te ver de novo!         |\n"
+                    + "\\        O que deseja fazer hoje?        /\n"
                     + " -----------------------------------------\n"
-                    + "                 /\\_/\\  MIAU!\n"
-                    + "                ( o.o )\n"
-                    + "                 > ^ <");
-            
+                    + "         /\\_/\\  MIAU!\n"
+                    + "        ( o.o )\\ n"
+                    + "         > ^ <");
+
             while (opcao != 0) {
-                
+
                 System.out.println("\n"
                         + "1-Capturar dados | 2-Monitorar | 0-Sair");
                 opcao = scan.nextInt();
-                
+
                 switch (opcao) {
                     case 0:
-                        System.out.println(" ---------------\n"
+                        System.out.println(" -----------\n"
                                 + "< Até mais! Miau!>\n"
                                 + " ---------------\n"
                                 + "   /\\_/\\  \n"
@@ -116,14 +116,14 @@ public class SwiftCli {
                                 + "   > ^ ^");
                         System.exit(0); // Sai do programa
                         break;
-                    
+
                     case 1:
                         System.out.println(" ----------------------------------------\n"
                                 + "< Se quiser encerrar a captura, digite 0 >\n"
                                 + " ----------------------------------------\n"
-                                + "          /\\_/\\  Bom monitoramento! Miau! Miau!\n"
-                                + "         ( >.o )\n"
-                                + "          > ^ <");
+                                + "       /\\_/\\  Bom monitoramento! Miau! Miau!\n"
+                                + "      ( >.o )\\ \n"
+                                + "       > ^ <");
                         //DEFININDO HOSTNAME
                         for (RedeInterface dado : interfaces) {
                             maquina.setNomeMaquina(grupoParametros.getHostName());
@@ -295,34 +295,35 @@ public class SwiftCli {
                                 0, 15000); // roda a cada 15segundos
 
                         break;
-                    
+
                     case 2:
                         System.out.println(" -----------------------------------------\n"
                                 + "< Irei te direcionar para o nosso website >\n"
                                 + " -----------------------------------------\n"
-                                + "           /\\_/\\  \n"
-                                + "          ( ^.^ )\n"
-                                + "           ^ º ^");
-                        
+                                + "        /\\_/\\ \n"
+                                + "       ( ^.^ )\\\n"
+                                + "        ^ º ^");
+
                         String url = "https://stabillis.azurewebsites.net";
-                        
+
                         try {
                             Desktop desktop = Desktop.getDesktop();
                             desktop.browse(new URI(url));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        
+
                         break;
-                    
+
                     default:
                         System.out.println("Opção inválida.");
                 }
             }
-            
+
         } else {
             System.out.println("E-mail e/ou senha incorretos.");
         }
-        
+
     }
 }
+
