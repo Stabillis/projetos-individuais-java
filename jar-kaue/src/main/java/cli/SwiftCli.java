@@ -71,14 +71,8 @@ public class SwiftCli {
         String email;
         String password;
 
-        System.out.println("LOGIN");
-        System.out.println("E-mail:");
-        email = scanEmail.nextLine();
-        System.out.println("Senha:");
-        password = scanSenha.nextLine();
-
-        usuario.setEmail(email);
-        usuario.setSenha(password);
+        usuario.setEmail("kaue@stabillis.com");
+        usuario.setSenha("kaue123");
 
         List<Usuario> listaUsuarios = new ArrayList();
         listaUsuarios = connAz.query("SELECT * FROM [dbo].[Usuario] WHERE email = ? AND senha = ?",
@@ -97,233 +91,185 @@ public class SwiftCli {
                     + "\\        O que deseja fazer hoje?        /\n"
                     + " -----------------------------------------\n"
                     + "         /\\_/\\  MIAU!\n"
-                    + "        ( o.o )\\ n"
+                    + "        ( o.o ) \n"
                     + "         > ^ <");
 
-            while (opcao != 0) {
-
-                System.out.println("\n"
-                        + "1-Capturar dados | 2-Monitorar | 0-Sair");
-                opcao = scan.nextInt();
-
-                switch (opcao) {
-                    case 0:
-                        System.out.println(" -----------\n"
-                                + "< Até mais! Miau!>\n"
-                                + " ---------------\n"
-                                + "   /\\_/\\  \n"
-                                + "  ( ^.^ )\n"
-                                + "   > ^ ^");
-                        System.exit(0); // Sai do programa
-                        break;
-
-                    case 1:
-                        System.out.println(" ----------------------------------------\n"
-                                + "< Se quiser encerrar a captura, digite 0 >\n"
-                                + " ----------------------------------------\n"
-                                + "       /\\_/\\  Bom monitoramento! Miau! Miau!\n"
-                                + "      ( >.o )\\ \n"
-                                + "       > ^ <");
-                        //DEFININDO HOSTNAME
-                        for (RedeInterface dado : interfaces) {
-                            maquina.setNomeMaquina(grupoParametros.getHostName());
-                        }
-
-                        //BUSCANDO E INSERINDO STATUS
-                        List<Status> listaStatus = new ArrayList<>();
-                        listaStatus = connAz.query("SELECT * FROM Status",
-                                new BeanPropertyRowMapper<>(Status.class));
-                        for (Status stats : listaStatus) {
-                            status.setIdStatus(stats.getIdStatus());
-                            status.setTipoStatus(stats.getTipoStatus());
-
-                            connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
-                                    + "SELECT ?, ?"
-                                    + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
-                                    status.getIdStatus(),
-                                    status.getTipoStatus(),
-                                    status.getTipoStatus()
-                            );
-                        }
-
-                        //PEGANDO dados da EMPRESA e inserindo 
-                        List<Empresa> listaEmpresas = new ArrayList<>();
-                        listaEmpresas = connAz.query("SELECT * FROM Empresa WHERE idEmpresa = ?",
-                                new BeanPropertyRowMapper<>(Empresa.class), usuario.getFkEmpresa());
-
-                        for (Empresa listaEmpresa : listaEmpresas) {
-                            empresa.setIdEmpresa(listaEmpresa.getIdEmpresa());
-                            empresa.setBairro(listaEmpresa.getBairro());
-                            empresa.setCep(listaEmpresa.getCep());
-                            empresa.setCidade(listaEmpresa.getCidade());
-                            empresa.setCnpj(listaEmpresa.getCnpj());
-                            empresa.setComplemento(listaEmpresa.getComplemento());
-                            empresa.setEstado(listaEmpresa.getEstado());
-                            empresa.setLogradouro(listaEmpresa.getLogradouro());
-                            empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
-                            empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
-                        }
-
-                        connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
-                                + " Logradouro, Complemento, Bairro, Cidade, Estado)"
-                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
-                                empresa.getIdEmpresa(),
-                                empresa.getNomeEmpresa(),
-                                empresa.getCnpj(),
-                                empresa.getTelefoneFixo(),
-                                empresa.getCep(),
-                                empresa.getLogradouro(),
-                                empresa.getComplemento(),
-                                empresa.getBairro(),
-                                empresa.getCidade(),
-                                empresa.getEstado(),
-                                empresa.getCnpj()
-                        );
-
-                        //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
-                        List<Maquina> listaMaquinas = new ArrayList<>();
-                        listaMaquinas = connAz.query("SELECT * FROM Maquina "
-                                + "WHERE nomeMaquina = ?",
-                                new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
-
-                        for (Maquina listaMaquina : listaMaquinas) {
-                            maquina.setIdMaquina(listaMaquina.getIdMaquina());
-                            maquina.setFkStatus(listaMaquina.getFkStatus());
-                            maquina.setCapacidadeMaxRAM(listaMaquina.getCapacidadeMaxRAM());
-                            maquina.setCapacidadeMaxDisco(listaMaquina.getCapacidadeMaxDisco());
-                            maquina.setCapacidadeMaxCPU(listaMaquina.getCapacidadeMaxCPU());
-                            maquina.setArquitetura(listaMaquina.getArquitetura());
-                            maquina.setSistemaOperacional(listaMaquina.getSistemaOperacional());
-                            maquina.setFkEmpresa(empresa.getIdEmpresa());
-                            captura.setFkMaquina(listaMaquina.getIdMaquina());
-                        }
-
-                        //INSERINDO DADOS MÁQUINA CONTAINER
-                        connEc.update("INSERT INTO Maquina (idMaquina, nomeMaquina, FK_Status, capacidadeMaxRam, capacidadeMaxDisco,"
-                                + " capacidadeMaxCPU, arquitetura, SistemaOperacional, FK_Empresa)"
-                                + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + " WHERE NOT EXISTS (SELECT 1 FROM Maquina WHERE nomeMaquina = ?)",
-                                maquina.getIdMaquina(),
-                                maquina.getNomeMaquina(),
-                                maquina.getFkStatus(),
-                                maquina.getCapacidadeMaxRAM(),
-                                maquina.getCapacidadeMaxDisco(),
-                                maquina.getCapacidadeMaxCPU(),
-                                maquina.getArquitetura(),
-                                maquina.getSistemaOperacional(),
-                                maquina.getFkEmpresa(),
-                                maquina.getNomeMaquina()
-                        );
-                        // TIMER
-                        new Timer().scheduleAtFixedRate(new TimerTask() {
-                            @Override
-                            public void run() {
-                                // Configuração da hora
-                                Timestamp dataHora = Timestamp.from(Instant.now());
-                                captura.setDataHora(dataHora);
-                                System.out.println("Dados da sua máquina:");
-
-                                // Uso da CPU
-                                String usoCpu = String.format("%.2f", looca.getProcessador().getUso());
-                                usoCpu = usoCpu.replace(",", ".");
-                                double usoCpuFormatado = Double.parseDouble(usoCpu);
-                                System.out.println("Uso CPU: " + usoCpuFormatado);
-
-                                // Uso da memória
-                                String memoriaUso = conversor.formatarBytes(looca.getMemoria().getEmUso());
-                                String[] arrayMemoriaUso = memoriaUso.split("GiB");
-                                System.out.println("Uso memória: " + arrayMemoriaUso[0]);
-                                Double memTotal = Double.valueOf(arrayMemoriaUso[0].replace(",", "."));
-
-                                //ALTERANDO VALORES
-                                captura.setUsoCPU(usoCpuFormatado);
-                                captura.setUsoRAM(memTotal);
-                                captura.setDataHora(dataHora);
-                                captura.setTempoAtividade(conversor.formatarSegundosDecorridos(looca.getSistema().getTempoDeAtividade()));
-
-                                //System.out.println("Memoria uso: " + looca.getMemoria().getEmUso());
-                                // Volume do disco
-                                for (int i = 0; i < volumes.size(); i++) {
-                                    String discoTotal = conversor.formatarBytes(volumes.get(0).getTotal());
-                                    String[] arrayDiscoTotal = discoTotal.split("GiB");
-                                    System.out.println("Total disco: " + arrayDiscoTotal[0]);
-                                    Double totalDisco = Double.valueOf(arrayDiscoTotal[0].replace(",", "."));
-
-                                    String discoDisponivel = conversor.formatarBytes(volumes.get(0).getDisponivel());
-                                    String[] arrayDiscoDisponivel = discoDisponivel.split("GiB");
-                                    System.out.println("Disponivel disco: " + arrayDiscoDisponivel[0]);
-                                    Double disponivelDisco = Double.valueOf(arrayDiscoDisponivel[0].replace(",", "."));
-                                    Double disco = (totalDisco - disponivelDisco);
-
-                                    captura.setUsoDisco(disco);
-                                }
-
-                                for (RedeInterface dado : interfaces) {
-                                    captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
-                                    captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
-                                    System.out.println("Bytes enviados : " + captura.getBytesEnviados());
-                                    System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
-                                }
-
-                                connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
-                                        + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                                        captura.getUsoRAM(),
-                                        captura.getUsoCPU(),
-                                        captura.getUsoDisco(),
-                                        captura.getBytesRecebidos(),
-                                        captura.getBytesEnviados(),
-                                        captura.getTempoAtividade(),
-                                        captura.getDataHora(),
-                                        captura.getFkMaquina()
-                                );
-                                connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
-                                        + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                                        captura.getUsoRAM(),
-                                        captura.getUsoCPU(),
-                                        captura.getUsoDisco(),
-                                        captura.getBytesRecebidos(),
-                                        captura.getBytesEnviados(),
-                                        captura.getTempoAtividade(),
-                                        captura.getDataHora(),
-                                        captura.getFkMaquina()
-                                );
-                            }
-                        },
-                                0, 15000); // roda a cada 15segundos
-
-                        break;
-
-                    case 2:
-                        System.out.println(" -----------------------------------------\n"
-                                + "< Irei te direcionar para o nosso website >\n"
-                                + " -----------------------------------------\n"
-                                + "        /\\_/\\ \n"
-                                + "       ( ^.^ )\\\n"
-                                + "        ^ º ^");
-
-                        String url = "https://stabillis.azurewebsites.net";
-
-                        try {
-                            Desktop desktop = Desktop.getDesktop();
-                            desktop.browse(new URI(url));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        break;
-
-                    default:
-                        System.out.println("Opção inválida.");
-                }
+            System.out.println(" ----------------------------------------\n"
+                    + " ----------------------------------------\n"
+                    + "       /\\_/\\  Bom monitoramento! Miau! Miau!\n"
+                    + "      ( >.o )\\ \n"
+                    + "       > ^ <");
+            
+            //DEFININDO HOSTNAME
+            for (RedeInterface dado : interfaces) {
+                maquina.setNomeMaquina(grupoParametros.getHostName());
             }
 
-        } else {
-            System.out.println("E-mail e/ou senha incorretos.");
-        }
+            //BUSCANDO E INSERINDO STATUS
+            List<Status> listaStatus = new ArrayList<>();
+            listaStatus = connAz.query("SELECT * FROM Status",
+                    new BeanPropertyRowMapper<>(Status.class));
+            for (Status stats : listaStatus) {
+                status.setIdStatus(stats.getIdStatus());
+                status.setTipoStatus(stats.getTipoStatus());
 
+                connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
+                        + "SELECT ?, ?"
+                        + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
+                        status.getIdStatus(),
+                        status.getTipoStatus(),
+                        status.getTipoStatus()
+                );
+            }
+
+            //PEGANDO dados da EMPRESA e inserindo 
+            List<Empresa> listaEmpresas = new ArrayList<>();
+            listaEmpresas = connAz.query("SELECT * FROM Empresa WHERE idEmpresa = ?",
+                    new BeanPropertyRowMapper<>(Empresa.class), usuario.getFkEmpresa());
+
+            for (Empresa listaEmpresa : listaEmpresas) {
+                empresa.setIdEmpresa(listaEmpresa.getIdEmpresa());
+                empresa.setBairro(listaEmpresa.getBairro());
+                empresa.setCep(listaEmpresa.getCep());
+                empresa.setCidade(listaEmpresa.getCidade());
+                empresa.setCnpj(listaEmpresa.getCnpj());
+                empresa.setComplemento(listaEmpresa.getComplemento());
+                empresa.setEstado(listaEmpresa.getEstado());
+                empresa.setLogradouro(listaEmpresa.getLogradouro());
+                empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
+                empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
+            }
+
+            connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
+                    + " Logradouro, Complemento, Bairro, Cidade, Estado)"
+                    + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+                    + " WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                    empresa.getIdEmpresa(),
+                    empresa.getNomeEmpresa(),
+                    empresa.getCnpj(),
+                    empresa.getTelefoneFixo(),
+                    empresa.getCep(),
+                    empresa.getLogradouro(),
+                    empresa.getComplemento(),
+                    empresa.getBairro(),
+                    empresa.getCidade(),
+                    empresa.getEstado(),
+                    empresa.getCnpj()
+            );
+
+            //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
+            List<Maquina> listaMaquinas = new ArrayList<>();
+            listaMaquinas = connAz.query("SELECT * FROM Maquina "
+                    + "WHERE nomeMaquina = ?",
+                    new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
+
+            for (Maquina listaMaquina : listaMaquinas) {
+                maquina.setIdMaquina(listaMaquina.getIdMaquina());
+                maquina.setFkStatus(listaMaquina.getFkStatus());
+                maquina.setCapacidadeMaxRAM(listaMaquina.getCapacidadeMaxRAM());
+                maquina.setCapacidadeMaxDisco(listaMaquina.getCapacidadeMaxDisco());
+                maquina.setCapacidadeMaxCPU(listaMaquina.getCapacidadeMaxCPU());
+                maquina.setArquitetura(listaMaquina.getArquitetura());
+                maquina.setSistemaOperacional(listaMaquina.getSistemaOperacional());
+                maquina.setFkEmpresa(empresa.getIdEmpresa());
+                captura.setFkMaquina(listaMaquina.getIdMaquina());
+            }
+
+            //INSERINDO DADOS MÁQUINA CONTAINER
+            connEc.update("INSERT INTO Maquina (idMaquina, nomeMaquina, FK_Status, capacidadeMaxRam, capacidadeMaxDisco,"
+                    + " capacidadeMaxCPU, arquitetura, SistemaOperacional, FK_Empresa)"
+                    + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?"
+                    + " WHERE NOT EXISTS (SELECT 1 FROM Maquina WHERE nomeMaquina = ?)",
+                    maquina.getIdMaquina(),
+                    maquina.getNomeMaquina(),
+                    maquina.getFkStatus(),
+                    maquina.getCapacidadeMaxRAM(),
+                    maquina.getCapacidadeMaxDisco(),
+                    maquina.getCapacidadeMaxCPU(),
+                    maquina.getArquitetura(),
+                    maquina.getSistemaOperacional(),
+                    maquina.getFkEmpresa(),
+                    maquina.getNomeMaquina()
+            );
+            // TIMER
+            new Timer().scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    // Configuração da hora
+                    Timestamp dataHora = Timestamp.from(Instant.now());
+                    captura.setDataHora(dataHora);
+                    System.out.println("Dados da sua máquina:");
+
+                    // Uso da CPU
+                    String usoCpu = String.format("%.2f", looca.getProcessador().getUso());
+                    usoCpu = usoCpu.replace(",", ".");
+                    double usoCpuFormatado = Double.parseDouble(usoCpu);
+                    System.out.println("Uso CPU: " + usoCpuFormatado);
+
+                    // Uso da memória
+                    String memoriaUso = conversor.formatarBytes(looca.getMemoria().getEmUso());
+                    String[] arrayMemoriaUso = memoriaUso.split("GiB");
+                    System.out.println("Uso memória: " + arrayMemoriaUso[0]);
+                    Double memTotal = Double.valueOf(arrayMemoriaUso[0].replace(",", "."));
+
+                    //ALTERANDO VALORES
+                    captura.setUsoCPU(usoCpuFormatado);
+                    captura.setUsoRAM(memTotal);
+                    captura.setDataHora(dataHora);
+                    captura.setTempoAtividade(conversor.formatarSegundosDecorridos(looca.getSistema().getTempoDeAtividade()));
+
+                    //System.out.println("Memoria uso: " + looca.getMemoria().getEmUso());
+                    // Volume do disco
+                    for (int i = 0; i < volumes.size(); i++) {
+                        String discoTotal = conversor.formatarBytes(volumes.get(0).getTotal());
+                        String[] arrayDiscoTotal = discoTotal.split("GiB");
+                        System.out.println("Total disco: " + arrayDiscoTotal[0]);
+                        Double totalDisco = Double.valueOf(arrayDiscoTotal[0].replace(",", "."));
+
+                        String discoDisponivel = conversor.formatarBytes(volumes.get(0).getDisponivel());
+                        String[] arrayDiscoDisponivel = discoDisponivel.split("GiB");
+                        System.out.println("Disponivel disco: " + arrayDiscoDisponivel[0]);
+                        Double disponivelDisco = Double.valueOf(arrayDiscoDisponivel[0].replace(",", "."));
+                        Double disco = (totalDisco - disponivelDisco);
+
+                        captura.setUsoDisco(disco);
+                    }
+
+                    for (RedeInterface dado : interfaces) {
+                        captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
+                        captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
+                        System.out.println("Bytes enviados : " + captura.getBytesEnviados());
+                        System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
+                    }
+
+                    connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
+                            + "bytesRecebidos, bytesEnviados, tempoAtividade,"
+                            + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                            captura.getUsoRAM(),
+                            captura.getUsoCPU(),
+                            captura.getUsoDisco(),
+                            captura.getBytesRecebidos(),
+                            captura.getBytesEnviados(),
+                            captura.getTempoAtividade(),
+                            captura.getDataHora(),
+                            captura.getFkMaquina()
+                    );
+                    connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
+                            + "bytesRecebidos, bytesEnviados, tempoAtividade,"
+                            + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                            captura.getUsoRAM(),
+                            captura.getUsoCPU(),
+                            captura.getUsoDisco(),
+                            captura.getBytesRecebidos(),
+                            captura.getBytesEnviados(),
+                            captura.getTempoAtividade(),
+                            captura.getDataHora(),
+                            captura.getFkMaquina()
+                    );
+                }
+            },
+                    0, 15000); // roda a cada 15segundos
+
+        }
     }
 }
-
