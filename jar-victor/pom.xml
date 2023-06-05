@@ -25,7 +25,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>cli.SwiftCli</mainClass>
+                            <mainClass>cli.Postcli</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
