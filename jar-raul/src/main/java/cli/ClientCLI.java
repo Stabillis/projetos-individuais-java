@@ -191,8 +191,8 @@ public class ClientCLI {
                         //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
                         List<Maquina> listaMaquinas = new ArrayList<>();
                         listaMaquinas = connAz.query("SELECT * FROM Maquina "
-                                + "WHERE nomeMaquina = ?",
-                                new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
+                                + "WHERE nomeMaquina = ? and FK_Empresa = ?",
+                                new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina(), empresa.getIdEmpresa());
 
                         for (Maquina listaMaquina : listaMaquinas) {
                             maquina.setIdMaquina(listaMaquina.getIdMaquina());
