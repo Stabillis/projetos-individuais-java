@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
- * @author alan
+ * @author Jonatas
  */
 public class ConexaoEC2 {
 

@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 /**
  *
- * @author alan
+ * @author jonatas
  */
 public class Captura {
 

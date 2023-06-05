@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
- * @author alan
+ * @author jonatas
  */
 public class ConexaoAzure {
 

@@ -2,7 +2,7 @@ package databases;
 
 /**
  *
- * @author alan
+ *@author jonatas
  */
 public class Maquina {
 
