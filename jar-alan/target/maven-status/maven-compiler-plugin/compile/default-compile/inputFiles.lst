@@ -1,6 +1,7 @@
 /home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/databases/Maquina.java
 /home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/connection/ConexaoEC2.java
 /home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/connection/ConexaoMySQL.java
+/home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/cli/CliArq2.java
 /home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/cli/ClientCLI.java
 /home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/databases/Status.java
 /home/alan/clone/projetos-individuais-java/jar-alan/src/main/java/connection/ConexaoAzure.java

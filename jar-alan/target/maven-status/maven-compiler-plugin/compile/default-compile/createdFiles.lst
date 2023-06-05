@@ -1,7 +1,10 @@
 cli/ClientCLI$1.class
+databases/Empresa.class
+cli/CliArq2$1.class
 connection/ConexaoEC2.class
 databases/Maquina.class
 databases/Usuario.class
+cli/CliArq2.class
 connection/ConexaoMySQL.class
 connection/ConexaoAzure.class
 databases/Captura.class
