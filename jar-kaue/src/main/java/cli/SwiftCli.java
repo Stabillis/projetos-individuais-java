@@ -63,14 +63,6 @@ public class SwiftCli {
         List<RedeInterface> interfaces = grupoRede.getInterfaces();
         List<String> parametros = grupoParametros.getServidoresDns();
 
-        // Login
-        Scanner scan = new Scanner(System.in);
-        Scanner scanEmail = new Scanner(System.in);
-        Scanner scanSenha = new Scanner(System.in);
-        Integer opcao = 1;
-        String email;
-        String password;
-
         usuario.setEmail("kaue@stabillis.com");
         usuario.setSenha("kaue123");
 
@@ -99,7 +91,7 @@ public class SwiftCli {
                     + "       /\\_/\\  Bom monitoramento! Miau! Miau!\n"
                     + "      ( >.o )\\ \n"
                     + "       > ^ <");
-            
+
             //DEFININDO HOSTNAME
             for (RedeInterface dado : interfaces) {
                 maquina.setNomeMaquina(grupoParametros.getHostName());
