@@ -85,10 +85,13 @@ public class ClientCLI {
                 new BeanPropertyRowMapper<>(Usuario.class),
                 usuario.getEmail(), usuario.getSenha());
 
+        for (Usuario Usuario : listaUsuarios) {
+            usuario.setFkEmpresa(Usuario.getFkEmpresa());
+        }
+
         if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
             System.out.println("Login efetuado com sucesso!");
-            System.out.println("Informe uma opção: \n");
-
+           
             while (opcao != 0) {
 
                 System.out.println("\n"
@@ -97,13 +100,12 @@ public class ClientCLI {
 
                 switch (opcao) {
                     case 0:
-                        
-                        System.out.println("Já vai? que pena, até a próxima.");
+                        System.out.println(" Até mais! ");
                         System.exit(0); // Sai do programa
                         break;
 
                     case 1:
-                        System.out.println("se desejar que a captura seja encerrada, digite 0(zero)");
+                        System.out.println("Se quiser encerrar a captura, digite 0 ");
                         //DEFININDO HOSTNAME
                         for (RedeInterface dado : interfaces) {
                             maquina.setNomeMaquina(grupoParametros.getHostName());
@@ -118,8 +120,8 @@ public class ClientCLI {
                             status.setTipoStatus(stats.getTipoStatus());
 
                             connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
-                                    + " SELECT ?, ?"
-                                    + " WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
+                                    + "SELECT ?, ?"
+                                    + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
                                     status.getIdStatus(),
                                     status.getTipoStatus(),
                                     status.getTipoStatus()
@@ -147,7 +149,7 @@ public class ClientCLI {
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + " WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
                                 empresa.getCnpj(),
@@ -164,7 +166,7 @@ public class ClientCLI {
                         //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
                         List<Maquina> listaMaquinas = new ArrayList<>();
                         listaMaquinas = connAz.query("SELECT * FROM Maquina "
-                                + " WHERE nomeMaquina = ?",
+                                + "WHERE nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
 
                         for (Maquina listaMaquina : listaMaquinas) {
@@ -240,37 +242,32 @@ public class ClientCLI {
                                 }
 
                                 for (RedeInterface dado : interfaces) {
-                                    long pacRecebidos = dado.getPacotesRecebidos();
-                                    int pacRecInt = (int) pacRecebidos;
-
-                                    captura.setPacotesRecebidos(pacRecInt);
-
-                                    long pacEnviados = dado.getPacotesEnviados();
-                                    int pacEnvInt = (int) pacEnviados;
-
-                                    captura.setPacotesEnviados(pacEnvInt);
+                                    captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
+                                    captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
+                                    System.out.println("Bytes enviados : " + captura.getBytesEnviados());
+                                    System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
                                 }
 
                                 connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
                                 );
                                 connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
@@ -282,7 +279,9 @@ public class ClientCLI {
                         break;
 
                     case 2:
-                        System.out.println("conheça o nosso website ");
+                        System.out.println(" Irei te direcionar para o nosso website");
+                                
+                                
 
                         String url = "https://stabillis.azurewebsites.net";
 

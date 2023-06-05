@@ -1,9 +1,12 @@
-cli\ClientCLI.class
 cli\ClientCLI$1.class
-connection\ConexaoMySQL.class
 databases\Captura.class
-connection\ConexaoAzure.class
+databases\Empresa.class
 databases\Status.class
+cli\CliArq2$1.class
+cli\ClientCLI.class
+connection\ConexaoMySQL.class
+connection\ConexaoAzure.class
 databases\Usuario.class
+cli\CliArq2.class
 databases\Maquina.class
 connection\ConexaoEC2.class

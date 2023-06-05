@@ -25,7 +25,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>cli.ClientCLI</mainClass>
+                            <mainClass>cli.CliArq2</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -41,7 +41,7 @@
             </plugin>
         </plugins>
     </build>
-    <name>jar-jonatas</name>
+    <name>jonatas-jar</name>
     
     <dependencies>
         
