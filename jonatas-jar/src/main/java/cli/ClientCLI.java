@@ -118,8 +118,8 @@ public class ClientCLI {
                             status.setTipoStatus(stats.getTipoStatus());
 
                             connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
-                                    + "SELECT ?, ?"
-                                    + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
+                                    + " SELECT ?, ?"
+                                    + " WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
                                     status.getIdStatus(),
                                     status.getTipoStatus(),
                                     status.getTipoStatus()
@@ -147,7 +147,7 @@ public class ClientCLI {
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                                + " WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
                                 empresa.getCnpj(),
@@ -164,7 +164,7 @@ public class ClientCLI {
                         //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
                         List<Maquina> listaMaquinas = new ArrayList<>();
                         listaMaquinas = connAz.query("SELECT * FROM Maquina "
-                                + "WHERE nomeMaquina = ?",
+                                + " WHERE nomeMaquina = ?",
                                 new BeanPropertyRowMapper<>(Maquina.class), maquina.getNomeMaquina());
 
                         for (Maquina listaMaquina : listaMaquinas) {
