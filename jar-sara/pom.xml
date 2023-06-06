@@ -25,7 +25,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>cli.CliArq2</mainClass>
+                            <mainClass>cli.ClientCLI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
