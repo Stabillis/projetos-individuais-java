@@ -28,10 +28,7 @@ import java.util.TimerTask;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- *
- * @author alan
- */
+
 public class ClientCLI {
 
     public static void main(String[] args) {
@@ -198,7 +195,7 @@ public class ClientCLI {
                         connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                                + " WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
                                 empresa.getCnpj(),
