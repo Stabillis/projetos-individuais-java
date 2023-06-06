@@ -191,11 +191,10 @@ public class ClientCLI {
                             empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
                             empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
                         }
-
-                        connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
+                                connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
-                                + " WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
+                                + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
                                 empresa.getIdEmpresa(),
                                 empresa.getNomeEmpresa(),
                                 empresa.getCnpj(),
@@ -208,6 +207,7 @@ public class ClientCLI {
                                 empresa.getEstado(),
                                 empresa.getCnpj()
                         );
+
 
                         //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
                         List<Maquina> listaMaquinas = new ArrayList<>();
