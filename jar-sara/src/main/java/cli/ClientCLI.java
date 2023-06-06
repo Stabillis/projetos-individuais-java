@@ -166,8 +166,8 @@ public class ClientCLI {
                             status.setTipoStatus(stats.getTipoStatus());
 
                             connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
-                                    + "SELECT ?, ?"
-                                    + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
+                                    + " SELECT ?, ?"
+                                    + " WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
                                     status.getIdStatus(),
                                     status.getTipoStatus(),
                                     status.getTipoStatus()
