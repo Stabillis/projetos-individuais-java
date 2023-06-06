@@ -82,6 +82,10 @@ public class ClientCLI {
                 new BeanPropertyRowMapper<>(Usuario.class),
                 usuario.getEmail(), usuario.getSenha());
 
+        for (Usuario Usuario : listaUsuarios) {
+            usuario.setFkEmpresa(Usuario.getFkEmpresa());
+        }
+
         if (listaUsuarios != null && !listaUsuarios.isEmpty()) {
             System.out.println("Login efetuado com sucesso!");
             System.out.println(" -----------------------------------------\n"
@@ -108,7 +112,6 @@ public class ClientCLI {
                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠀⠉⠛⠃⠀⠀⠀⠀⠀⠉⠉⠁⠀⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
-
             while (opcao != 0) {
 
                 System.out.println("\n"
@@ -117,7 +120,7 @@ public class ClientCLI {
 
                 switch (opcao) {
                     case 0:
-                        System.out.println(" -----------\n"
+                       System.out.println(" -----------\n"
                                 + "< ♡♡ Até mais! ♡♡ >\n"
                                 + "⠀          ⢀⡤⠤⠤⠤⠤⢤⡀⠀⠀⠀⠀⠀⠀⠀\n" +
                                     "⠀⠀⠀⠀⠀⢠⠞⠉⠉⠀⠀⠀⠀⠀⠀⠈⠓⠒⢄⠀⠀⠀⠀\n" +
@@ -166,8 +169,8 @@ public class ClientCLI {
                             status.setTipoStatus(stats.getTipoStatus());
 
                             connEc.update("INSERT INTO Status (idStatus, TipoStatus)"
-                                    + " SELECT ?, ?"
-                                    + " WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
+                                    + "SELECT ?, ?"
+                                    + "WHERE NOT EXISTS (SELECT 1 FROM Status WHERE TipoStatus = ?)",
                                     status.getIdStatus(),
                                     status.getTipoStatus(),
                                     status.getTipoStatus()
@@ -191,7 +194,8 @@ public class ClientCLI {
                             empresa.setNomeEmpresa(listaEmpresa.getNomeEmpresa());
                             empresa.setTelefoneFixo(listaEmpresa.getTelefoneFixo());
                         }
-                                connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
+
+                        connEc.update("INSERT INTO Empresa (idEmpresa, NomeEmpresa, CNPJ, TelefoneFixo, CEP,"
                                 + " Logradouro, Complemento, Bairro, Cidade, Estado)"
                                 + " SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
                                 + "WHERE NOT EXISTS (SELECT 1 FROM Empresa WHERE CNPJ = ?)",
@@ -207,7 +211,6 @@ public class ClientCLI {
                                 empresa.getEstado(),
                                 empresa.getCnpj()
                         );
-
 
                         //BUSCANDO MAQUINA A PARTIR DO HOSTNAME
                         List<Maquina> listaMaquinas = new ArrayList<>();
@@ -288,37 +291,32 @@ public class ClientCLI {
                                 }
 
                                 for (RedeInterface dado : interfaces) {
-                                    long pacRecebidos = dado.getPacotesRecebidos();
-                                    int pacRecInt = (int) pacRecebidos;
-
-                                    captura.setPacotesRecebidos(pacRecInt);
-
-                                    long pacEnviados = dado.getPacotesEnviados();
-                                    int pacEnvInt = (int) pacEnviados;
-
-                                    captura.setPacotesEnviados(pacEnvInt);
+                                    captura.setBytesEnviados(conversor.formatarBytes(dado.getBytesEnviados()));
+                                    captura.setBytesRecebidos(conversor.formatarBytes(dado.getBytesRecebidos()));
+                                    System.out.println("Bytes enviados : " + captura.getBytesEnviados());
+                                    System.out.println("Bytes recebidos : " + captura.getBytesRecebidos());
                                 }
 
                                 connEc.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
                                 );
                                 connAz.update("INSERT INTO Captura (usoRAM, usoCPU, usoDisco,"
-                                        + "pacotesRecebidos, pacotesEnviados, tempoAtividade,"
+                                        + "bytesRecebidos, bytesEnviados, tempoAtividade,"
                                         + "dataHora, FK_Maquina) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                         captura.getUsoRAM(),
                                         captura.getUsoCPU(),
                                         captura.getUsoDisco(),
-                                        captura.getPacotesRecebidos(),
-                                        captura.getPacotesEnviados(),
+                                        captura.getBytesRecebidos(),
+                                        captura.getBytesEnviados(),
                                         captura.getTempoAtividade(),
                                         captura.getDataHora(),
                                         captura.getFkMaquina()
@@ -330,7 +328,7 @@ public class ClientCLI {
                         break;
 
                     case 2:
-                        System.out.println(" -----------------------------------------\n"
+                         System.out.println(" -----------------------------------------\n"
                                 + "< Irei te direcionar para o nosso website >\n"
                                 + " -----------------------------------------\n"
                                 + "⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n" +
@@ -352,6 +350,8 @@ public class ClientCLI {
                                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡾⢠⣇⣼⢠⣯⣀⣤⣤⣤⣤⣤⣤⣄⣀⣼⡀⣧⣸⡀⣇⣀⠀⠀⠀⠀⠀\n" +
                                 "⠀⠀⠀⠀⠀⠾⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣷⠶⠀\n" +
                                 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠉⠉⠉⠉⠙⠛⠛⠛⠛⠛⠛⠛⠛⠋⠉⠉⠉");
+                                
+                                
 
                         String url = "https://stabillis.azurewebsites.net";
 
