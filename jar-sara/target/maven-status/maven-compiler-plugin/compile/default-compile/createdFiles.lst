@@ -1,8 +1,5 @@
-cli\ClientCLI.class
-cli\ClientCLI$1.class
 connection\ConexaoMySQL.class
 databases\Captura.class
-databases\Empresa.class
 connection\ConexaoAzure.class
 databases\Status.class
 databases\Usuario.class

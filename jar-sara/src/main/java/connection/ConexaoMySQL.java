@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  *
- * @author Jonatas
+ * @author alan
  */
 public class ConexaoMySQL {
 
@@ -18,7 +18,7 @@ public class ConexaoMySQL {
         dataSource​.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource​.setUrl("jdbc:mysql://localhost:3306/stabillis");
         dataSource​.setUsername("root");
-        dataSource​.setPassword("urubu100");
+        dataSource​.setPassword("1225");
 
         this.connectionMySql = new JdbcTemplate(dataSource);
     }

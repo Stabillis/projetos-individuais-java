@@ -2,7 +2,7 @@ package databases;
 
 /**
  *
- * @author jonatas
+ * @author alan
  */
 public class Usuario {
 
